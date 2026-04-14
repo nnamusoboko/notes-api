@@ -12,6 +12,14 @@ class NotesController {
             "data": createdNote
         });
     }
+
+    getAllNotes: RequestHandler = async (_req: Request, res: Response) => {
+       const allNotes = await NotesService.getNotes(); 
+       return res.status(200).json({
+           "message": "All notes returned",
+           "data": allNotes
+       })
+    }
 }
 
 export default new NotesController();
