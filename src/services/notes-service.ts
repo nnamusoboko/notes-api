@@ -11,6 +11,10 @@ class NotesService {
     getNotes = async (): Promise<Note[]> => {
         return NotesRepo.retrieveNotes();
     }
+
+    getNote = async (noteId: string): Promise<Note | undefined> => {
+        return NotesRepo.retrieveNoteById(noteId);
+    }
 }
 
 export default new NotesService();

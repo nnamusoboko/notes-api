@@ -21,6 +21,10 @@ class NotesRepo {
     retrieveNotes = async (): Promise<Note[]> => {
        return [...this.notesArr]; 
     }
+
+    retrieveNoteById = async (noteId: string): Promise<Note | undefined> => {
+        return this.notesArr.find(note => note.id === noteId);
+    }
 }
 
 export default new NotesRepo();
