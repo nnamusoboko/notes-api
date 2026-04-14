@@ -17,6 +17,10 @@ class NotesRepo {
         
         return newNote;
     }
+
+    retrieveNotes = async (): Promise<Note[]> => {
+       return [...this.notesArr]; 
+    }
 }
 
 export default new NotesRepo();
