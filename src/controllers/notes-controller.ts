@@ -56,18 +56,18 @@ class NotesController {
             })
         }
 
-        const note = await NotesService.updateNote(noteId, userInfo);
-
-        if (!note) {
-            return res.status(404).json({
-                "message": `Note with [noteId]: ${noteId} doesnt exist` 
+        try {
+            const note: Note = await NotesService.updateNote(noteId, userInfo);
+            return res.status(200).json({
+                "message": "Note updated",
+                "data": note
             });
+        } catch(error) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json({"message": error.message});
+            }
+            return res.status(500).json({"message": "Internal Server Error"});
         }
-
-        return res.status(200).json({
-            "message": "Note updated",
-            "data": note
-        })
     }
 
     deleteNote:RequestHandler = async (req, res) => {

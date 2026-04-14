@@ -21,8 +21,14 @@ class NotesService {
         return note
     }
 
-    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
-        return NotesRepo.updateNote(noteId, noteInfo);
+    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note> => {
+        const note = await NotesRepo.updateNote(noteId, noteInfo);
+
+        if (!note) {
+            throw new AppError("Note not found", 404);
+        }
+
+        return note;
     }
 
     remove = async (noteId: string): Promise<void> => {
