@@ -2,7 +2,7 @@ import type { CreateNoteRequest, CreateNoteResponse, Note, UpdateNoteRequest,  }
 import crypto from 'node:crypto';
 
 class NotesRepo {
-    notesArr: Note[] = [];
+    private notesArr: Note[] = [];
 
     saveNote = async (note: CreateNoteRequest):  Promise<CreateNoteResponse> => {
         const now = new Date();
@@ -38,6 +38,14 @@ class NotesRepo {
         result.contents = noteInfo.contents ?? result.contents;
 
         return result;
+    }
+
+    removeNote = async (noteId: string): Promise<boolean> => {
+        const originalLength = this.notesArr.length;
+        
+        this.notesArr = this.notesArr.filter(note => note.id !== noteId);
+
+        return this.notesArr.length < originalLength;        
     }
 }
 
