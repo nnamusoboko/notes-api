@@ -1,4 +1,4 @@
-import type { CreateNoteRequest, CreateNoteResponse, Note } from "../types/types.js"; 
+import type { CreateNoteRequest, CreateNoteResponse, Note, UpdateNoteRequest,  } from "../types/types.js"; 
 import crypto from 'node:crypto';
 
 class NotesRepo {
@@ -24,6 +24,20 @@ class NotesRepo {
 
     retrieveNoteById = async (noteId: string): Promise<Note | undefined> => {
         return this.notesArr.find(note => note.id === noteId);
+    }
+
+    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
+        
+        const result: Note | undefined = await this.retrieveNoteById(noteId);
+
+        if (!result) {
+            return undefined;
+        }
+
+        result.title = noteInfo.title ?? result.title;
+        result.contents = noteInfo.contents ?? result.contents;
+
+        return result;
     }
 }
 
