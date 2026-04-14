@@ -7,7 +7,7 @@ class NotesController {
         const {title, contents}: CreateNoteRequest = req.body;
         
         const createdNote = await NotesService.create({title, contents});
-        return res.status(200).json({
+        return res.status(201).json({
             "message": "Note created",
             "data": createdNote
         });
