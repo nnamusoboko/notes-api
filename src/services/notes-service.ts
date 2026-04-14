@@ -32,13 +32,14 @@ class NotesService {
     }
 
     remove = async (noteId: string): Promise<void> => {
+
         const result: boolean = await NotesRepo.removeNote(noteId);
 
         if (result) {
-            return console.log(`Note removed`);
+            console.log("Note removed");
         }
 
-        throw new Error("NOT_FOUND");
+         throw new AppError("Note not found", 404); 
     }
 }
 

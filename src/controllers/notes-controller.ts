@@ -80,10 +80,10 @@ class NotesController {
         try {
             await NotesService.remove(noteId);
             return res.status(204).send();
-        } catch (error: any) {
+        } catch (error) {
             
-            if (error.message === "NOT_FOUND"){
-                return res.status(404).json({"message": "Note not found"});
+            if (error instanceof AppError){
+                return res.status(error.statusCode).json({"message": error.message});
             }
             return res.status(500).json({"message": "Internal server error"});
         }
