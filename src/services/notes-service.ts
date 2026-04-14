@@ -36,7 +36,7 @@ class NotesService {
         const result: boolean = await NotesRepo.removeNote(noteId);
 
         if (result) {
-            console.log("Note removed");
+           return console.log("Note removed");
         }
 
          throw new AppError("Note not found", 404); 
