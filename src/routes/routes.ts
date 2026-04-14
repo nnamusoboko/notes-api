@@ -8,9 +8,7 @@ router.get('/health', (_req, res) => {
 });
 
 router.post('/notes', Handler.createNote);
-router.get('/notes', (_req, res) => {
-    res.status(200).json({"message": "soon returning created notes"});
-});
+router.get('/notes', Handler.getAllNotes);
 router.get('/notes/:id', (_req, res) => {
     res.status(200).json({"message": "soon returning contents of a note"});
 });
