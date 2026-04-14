@@ -1,4 +1,4 @@
-import type { CreateNoteRequest, CreateNoteResponse, Note } from "../types/types.js"
+import type { CreateNoteRequest, CreateNoteResponse, Note, UpdateNoteRequest } from "../types/types.js"
 import NotesRepo from '../repositories/notes-repo.js';
 
 class NotesService {
@@ -14,6 +14,10 @@ class NotesService {
 
     getNote = async (noteId: string): Promise<Note | undefined> => {
         return NotesRepo.retrieveNoteById(noteId);
+    }
+
+    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
+        return NotesRepo.updateNote(noteId, noteInfo);
     }
 }
 
