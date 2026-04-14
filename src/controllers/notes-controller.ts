@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from "express";
 import NotesService from '../services/notes-service.js';
-import type  { CreateNoteRequest, Note } from "../types/types.js";
+import type  { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js";
 
 class NotesController {
     createNote: RequestHandler = async (req: Request, res: Response) => {
@@ -38,6 +38,31 @@ class NotesController {
         return res.status(200).json({
             "data": result
         });
+    }
+
+    updateSingleNote: RequestHandler = async (req: Request, res: Response) => {
+        const userInfo: UpdateNoteRequest = req.body;
+
+        const noteId  = req.params.id;
+        
+        if (!noteId || typeof noteId !== 'string') {
+            return res.status(400).json({
+                "message": "provide note-id"
+            })
+        }
+
+        const note = await NotesService.updateNote(noteId, userInfo);
+
+        if (!note) {
+            return res.status(400).json({
+                "message": `Note with [noteId]: ${noteId} doesnt exist` 
+            });
+        }
+
+        return res.status(200).json({
+            "message": "Note updated",
+            "data": note
+        })
     }
 }
 
