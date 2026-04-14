@@ -1,6 +1,7 @@
 import type { Request, Response, RequestHandler } from "express";
 import NotesService from '../services/notes-service.js';
 import type  { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js";
+import { AppError } from "../utils/error.js";
 
 class NotesController {
     createNote: RequestHandler = async (req: Request, res: Response) => {
@@ -29,15 +30,19 @@ class NotesController {
                 "message": "Provide note-id"
             })
         }
-        
-        const result: Note | undefined = await NotesService.getNote(noteId);
-        if (!result) {
-            return res.status(404).json({"message": "Note doesnt exist"});
-        }
 
-        return res.status(200).json({
+        try {
+            const result: Note = await NotesService.getNote(noteId);
+            return res.status(200).json({
             "data": result
         });
+        } catch(error) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json({"message": error.message});
+            }
+
+            return res.status(500).json({"message": "internal Server Error"});                
+        }
     }
 
     updateSingleNote: RequestHandler = async (req: Request, res: Response) => {

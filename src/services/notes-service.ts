@@ -1,5 +1,6 @@
 import type { CreateNoteRequest, CreateNoteResponse, Note, UpdateNoteRequest } from "../types/types.js"
 import NotesRepo from '../repositories/notes-repo.js';
+import { AppError } from "../utils/error.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<CreateNoteResponse> => {        
@@ -10,8 +11,14 @@ class NotesService {
         return NotesRepo.retrieveNotes();
     }
 
-    getNote = async (noteId: string): Promise<Note | undefined> => {
-        return NotesRepo.retrieveNoteById(noteId);
+    getNote = async (noteId: string): Promise<Note> => {
+        const note = await NotesRepo.retrieveNoteById(noteId);
+
+        if (!note) {
+            throw new AppError("Note not found", 404);
+        }
+
+        return note
     }
 
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
