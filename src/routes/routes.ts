@@ -9,9 +9,7 @@ router.get('/health', (_req, res) => {
 
 router.post('/notes', Handler.createNote);
 router.get('/notes', Handler.getAllNotes);
-router.get('/notes/:id', (_req, res) => {
-    res.status(200).json({"message": "soon returning contents of a note"});
-});
+router.get('/notes/:id', Handler.getSingleNote);
 router.patch('/notes/:id', (_req, res) => {
     res.status(200).json({"message": "soon updating note"});
 });
