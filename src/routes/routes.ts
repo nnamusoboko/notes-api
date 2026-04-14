@@ -1,4 +1,5 @@
 import express from "express";
+import Handler from '../controllers/notes-controller.js';
 
 const router = express.Router();
 
@@ -6,9 +7,7 @@ router.get('/health', (_req, res) => {
     res.status(200).json({"message": "Server running"});
 });
 
-router.post('/notes', (_req, res) => {
-    res.status(201).json({"message": "soon creating new notes"});
-});
+router.post('/notes', Handler.createNote);
 router.get('/notes', (_req, res) => {
     res.status(200).json({"message": "soon returning created notes"});
 });
