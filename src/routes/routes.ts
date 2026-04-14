@@ -11,8 +11,6 @@ router.post('/notes', Handler.createNote);
 router.get('/notes', Handler.getAllNotes);
 router.get('/notes/:id', Handler.getSingleNote);
 router.patch('/notes/:id', Handler.updateSingleNote);
-router.delete('/notes/:id', (_req, res) => {
-    res.status(204).json({"message": "soon deleting created note"});
-});
+router.delete('/notes/:id', Handler.deleteNote);
 
 export default router;

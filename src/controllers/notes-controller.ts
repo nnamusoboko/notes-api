@@ -64,6 +64,25 @@ class NotesController {
             "data": note
         })
     }
+
+    deleteNote:RequestHandler = async (req, res) => {
+        const noteId = req.params.id;
+
+        if (!noteId || typeof noteId !== 'string') {
+            return res.status(400).json({"message": "note-id not provide"});
+        }
+
+        try {
+            await NotesService.remove(noteId);
+            return res.status(204).send();
+        } catch (error: any) {
+            
+            if (error.message === "NOT_FOUND"){
+                return res.status(404).json({"message": "Note not found"});
+            }
+            return res.status(500).json({"message": "Internal server error"});
+        }
+    }
 }
 
 export default new NotesController();
