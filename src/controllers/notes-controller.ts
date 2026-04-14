@@ -54,7 +54,7 @@ class NotesController {
         const note = await NotesService.updateNote(noteId, userInfo);
 
         if (!note) {
-            return res.status(400).json({
+            return res.status(404).json({
                 "message": `Note with [noteId]: ${noteId} doesnt exist` 
             });
         }
