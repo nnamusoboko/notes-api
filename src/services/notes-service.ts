@@ -4,11 +4,11 @@ import { AppError } from "../utils/error.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<CreateNoteResponse> => {        
-        return NotesRepo.saveNote(note);
+        return await NotesRepo.saveNote(note);
     }
 
     getNotes = async (): Promise<Note[]> => {
-        return NotesRepo.retrieveNotes();
+        return await NotesRepo.retrieveNotes();
     }
 
     getNote = async (noteId: string): Promise<Note> => {
