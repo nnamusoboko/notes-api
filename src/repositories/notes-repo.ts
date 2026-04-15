@@ -37,6 +37,8 @@ class NotesRepo {
         result.title = noteInfo.title ?? result.title;
         result.contents = noteInfo.contents ?? result.contents;
 
+        result.updatedAt = new Date();
+
         return result;
     }
 
