@@ -46,14 +46,21 @@ class NotesController {
     }
 
     updateSingleNote: RequestHandler = async (req: Request, res: Response) => {
-        const userInfo: UpdateNoteRequest = req.body;
-
         const noteId  = req.params.id;
+        const userInfo: UpdateNoteRequest = req.body;
         
         if (!noteId || typeof noteId !== 'string') {
             return res.status(400).json({
                 "message": "provide note-id"
             })
+        }
+
+        if (!userInfo.title || userInfo.title.trim() === "") {
+            return res.status(400).json({"message": "No title provided"});
+        }
+
+        if (!userInfo.contents || userInfo.contents.trim() === "") {
+            return res.status(400).json({"message": "No contents provided"});
         }
 
         try {
