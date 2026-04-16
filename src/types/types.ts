@@ -7,5 +7,4 @@ export interface Note {
 }
 
 export type CreateNoteRequest = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>
-export interface CreateNoteResponse extends Note {};
 export type UpdateNoteRequest = Partial<Pick<Note, 'title' | 'contents'>>
