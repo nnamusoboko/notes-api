@@ -56,13 +56,21 @@ class NotesController {
         }
 
         if ("title" in userInfo) {
-            if (typeof userInfo.title !== 'string' || userInfo.title.trim() === ""){
+            if (typeof userInfo.title !== 'string') {
+                return res.status(400).json({"message": "Enter a valid title"});
+            }
+
+            if (userInfo.title.trim() === "") {
                 return res.status(400).json({"message": "No title provided"});
             }
         }
         
         if ("contents" in userInfo) {
-            if (typeof userInfo.contents !== 'string' || userInfo.contents.trim() === "") {
+            if (typeof userInfo.contents !== 'string') {
+                return res.status(400).json({"message": "Wrong format of content provided"});
+            }
+
+            if (userInfo.contents.trim() === "") {
                 return res.status(400).json({"message": "No contents provided"});
             }
         }
