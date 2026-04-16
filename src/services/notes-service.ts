@@ -3,7 +3,23 @@ import NotesRepo from '../repositories/notes-repo.js';
 import { AppError } from "../utils/error.js";
 
 class NotesService {
-    create = async (note: CreateNoteRequest): Promise<Note> => {        
+    create = async (note: CreateNoteRequest): Promise<Note> => {
+        if (typeof note.title !== 'string' ) {
+              throw new AppError("Wrong title format provided", 400);
+        }
+
+        if (note.title.trim() === "") {
+            throw new AppError("No title provided", 400);
+        }
+
+        if (typeof note.contents !== 'string') {
+            throw new AppError("Invalid content type provided", 400);
+        }
+
+        if (note.contents.trim() === "") {
+            throw new AppError("No contents provided", 400);
+        }
+
         return await NotesRepo.saveNote(note);
     }
 
