@@ -55,12 +55,16 @@ class NotesController {
             })
         }
 
-        if (!userInfo.title || userInfo.title.trim() === "") {
-            return res.status(400).json({"message": "No title provided"});
+        if ("title" in userInfo) {
+            if (typeof userInfo.title !== 'string' || userInfo.title.trim() === ""){
+                return res.status(400).json({"message": "No title provided"});
+            }
         }
-
-        if (!userInfo.contents || userInfo.contents.trim() === "") {
-            return res.status(400).json({"message": "No contents provided"});
+        
+        if ("contents" in userInfo) {
+            if (typeof userInfo.contents !== 'string' || userInfo.contents.trim() === "") {
+                return res.status(400).json({"message": "No contents provided"});
+            }
         }
 
         try {
