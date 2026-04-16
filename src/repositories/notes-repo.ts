@@ -1,10 +1,10 @@
-import type { CreateNoteRequest, CreateNoteResponse, Note, UpdateNoteRequest,  } from "../types/types.js"; 
+import type { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js"; 
 import crypto from 'node:crypto';
 
 class NotesRepo {
     private notesArr: Note[] = [];
 
-    saveNote = async (note: CreateNoteRequest):  Promise<CreateNoteResponse> => {
+    saveNote = async (note: CreateNoteRequest):  Promise<Note> => {
         const now = new Date();
         const newNote = {
             id: crypto.randomUUID(), 
