@@ -36,10 +36,9 @@ class NotesController {
             }
         }
 
-       const allNotes = await NotesService.getNotes(pageNum, limitNum); 
+       const data = await NotesService.getNotes(pageNum, limitNum); 
        return res.status(200).json({
-           "message": "All notes returned",
-           "data": allNotes
+           data
        })
     }
 
