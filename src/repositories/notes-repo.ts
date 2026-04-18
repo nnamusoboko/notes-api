@@ -50,11 +50,19 @@ class NotesRepo {
     }
 
     removeNote = async (noteId: string): Promise<boolean> => {
-        const originalLength = this.notesArr.length;
+        // this.notesArr = this.notesArr.filter(note => note.id !== noteId);
+        let isDeleted: boolean = false;
         
-        this.notesArr = this.notesArr.filter(note => note.id !== noteId);
+        // soft delete
+        for (const note of this.notesArr) {
+            if (note.id === noteId) {
+                note.deletedAt = new Date();
+                isDeleted = true;
+                return isDeleted;
+            }
+        }
 
-        return this.notesArr.length < originalLength;        
+        return isDeleted;        
     }
 
     returnNoteCount = async (): Promise<number> => {
