@@ -4,6 +4,7 @@ export interface Note {
     contents: string,
     createdAt: Date,
     updatedAt: Date
+    deletedAt: Date | null
 }
 
 export interface NotesMetaData {
@@ -20,5 +21,5 @@ export interface PaginatedResponse {
     meta: NotesMetaData
 }
 
-export type CreateNoteRequest = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>
+export type CreateNoteRequest = Omit<Note, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
 export type UpdateNoteRequest = Partial<Pick<Note, 'title' | 'contents'>>
