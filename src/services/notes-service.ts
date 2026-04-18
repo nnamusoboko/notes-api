@@ -1,4 +1,4 @@
-import type { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js"
+import type { CreateNoteRequest, Note, NotesMetaData, PaginatedResponse, UpdateNoteRequest } from "../types/types.js"
 import NotesRepo from '../repositories/notes-repo.js';
 import { AppError } from "../utils/error.js";
 
@@ -23,17 +23,35 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (page?: number, limit?: number): Promise<Note[]> => {
+    getNotes = async (page?: number, limit?: number): Promise<PaginatedResponse> => {
+        let notesData: Note[];
+        let meta: NotesMetaData;
         
-
         if (page && limit) {
             const offset = (page -1) * limit;
 
             console.log('DEBUG[service]: ', 'Page:', page, 'Limit:', limit);
 
-            return await NotesRepo.retrieveNotes(offset, limit);
+            notesData = await NotesRepo.retrieveNotes(offset, limit);
+            meta = await this.getMetaData(page, limit);
+
+            return {
+                meta,
+                notes: notesData,
+            };
         }
-        return await NotesRepo.retrieveNotes();
+
+        // set default page and limit if user doesnt provide
+        page = 1;
+        limit = 0;
+
+        notesData = await NotesRepo.retrieveNotes();
+        meta = await this.getMetaData(page, limit);
+
+        return {
+            meta,
+            notes: notesData,
+        }
     }
 
     getNote = async (noteId: string): Promise<Note> => {
