@@ -60,8 +60,11 @@ class NotesRepo {
         // soft delete
         for (const note of this.notesArr) {
             if (note.id === noteId) {
-                note.deletedAt = new Date();
+                const now = new Date();
+                note.deletedAt = now;
+                note.updatedAt = now;
                 isDeleted = true;
+
                 return isDeleted;
             }
         }
