@@ -136,7 +136,7 @@ class NotesController {
             })
         } catch (error: unknown) {
             if (error instanceof AppError) {
-                return res.status(error.statusCode).json(error.message); 
+                return res.status(error.statusCode).json({"message": error.message}); 
             }
 
             return res.status(500).json({

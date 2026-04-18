@@ -113,7 +113,7 @@ class NotesService {
         const returned: Note[] = await NotesRepo.extractDeletedNotes();
         
         if (returned.length <= 1) {
-            throw new AppError("No notes deleted found", 404);
+            throw new AppError("No deleted notes found", 404);
         }
 
         return returned;
