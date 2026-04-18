@@ -34,8 +34,15 @@ class NotesRepo {
         return tempArr;
     }
 
-    retrieveNoteById = async (noteId: string): Promise<Note | undefined> => {
-        return this.notesArr.find(note => note.id === noteId && note.deletedAt === null);
+    retrieveNoteById = async (noteId: string, includeDeleted = false): Promise<Note | undefined> => {
+        return  this.notesArr.find(note => {
+            const matchesId = note.id === noteId;
+
+            if (includeDeleted) {
+                return matchesId; 
+            }         
+            return matchesId && note.deletedAt == null; 
+        });
     }
 
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
@@ -81,7 +88,7 @@ class NotesRepo {
     }
 
     restoreNote = async (noteId: string): Promise<Note | null> => {
-        const note: Note | undefined = await this.retrieveNoteById(noteId);
+        const note: Note | undefined = await this.retrieveNoteById(noteId, true);
 
         if (!note) return null;
 
