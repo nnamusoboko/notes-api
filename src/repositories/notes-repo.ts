@@ -72,6 +72,10 @@ class NotesRepo {
     returnNoteCount = async (): Promise<number> => {
         return this.notesArr.length;
     }
+
+    extractDeletedNotes = async (): Promise<Note[]> => {
+        return this.notesArr.filter(note => note.deletedAt !== null);
+    }
 }
 
 export default new NotesRepo();
