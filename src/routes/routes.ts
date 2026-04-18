@@ -5,7 +5,10 @@ const router = express.Router();
 
 router.post('/notes', Handler.createNote);
 router.get('/notes', Handler.getAllNotes);
-router.get('/notes/:id', Handler.getSingleNote);
+
+router.get('/notes/deleted', Handler.getDeletedNotes); 
+
+router.get('/notes/:id', Handler.getSingleNote); 
 router.patch('/notes/:id', Handler.updateSingleNote);
 router.delete('/notes/:id', Handler.deleteNote);
 

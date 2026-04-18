@@ -127,6 +127,23 @@ class NotesController {
             return res.status(500).json({"message": "Internal server error"});
         }
     }
+
+    getDeletedNotes: RequestHandler = async (_req, res) => {
+        try {
+            const data = await NotesService.getDeletedNotes();
+            return res.status(200).json({
+                data
+            })
+        } catch (error: unknown) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json(error.message); 
+            }
+
+            return res.status(500).json({
+                "message": "Internal server Error"
+            })
+        }
+    }
 }
 
 export default new NotesController();
