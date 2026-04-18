@@ -11,7 +11,8 @@ class NotesRepo {
             title: note.title,
             contents: note.contents,
             createdAt: now,
-            updatedAt: now
+            updatedAt: now,
+            deletedAt: null
         }
         this.notesArr.push(newNote);    
         
