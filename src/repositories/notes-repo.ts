@@ -2,7 +2,7 @@ import type { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.
 import crypto from 'node:crypto';
 
 class NotesRepo {
-    private notesArr: Note[] = [];
+    private readonly notesArr: Note[] = [];
 
     saveNote = async (note: CreateNoteRequest):  Promise<Note> => {
         const now = new Date();
@@ -55,7 +55,6 @@ class NotesRepo {
     }
 
     removeNote = async (noteId: string): Promise<boolean> => {
-        // this.notesArr = this.notesArr.filter(note => note.id !== noteId);
         let isDeleted: boolean = false;
         
         // soft delete
