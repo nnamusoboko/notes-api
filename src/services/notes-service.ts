@@ -118,6 +118,20 @@ class NotesService {
 
         return returned;
     }
+
+    restoreNote = async (noteId: string): Promise<Note> => {
+        if (!noteId) {
+            throw new AppError("Provide note-id", 400);
+        }
+
+        const note: Note | null = await NotesRepo.restoreNote(noteId);
+
+        if (note === null) {
+            throw new AppError("Note not found", 404);
+        }
+
+        return note;
+    }
 }
 
 export default new NotesService();

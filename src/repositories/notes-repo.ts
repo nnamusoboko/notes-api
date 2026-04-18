@@ -79,6 +79,17 @@ class NotesRepo {
     extractDeletedNotes = async (): Promise<Note[]> => {
         return this.notesArr.filter(note => note.deletedAt !== null);
     }
+
+    restoreNote = async (noteId: string): Promise<Note | null> => {
+        const note = this.notesArr.find(note => note.id === noteId);
+
+        if (!note) return null;
+
+        note.updatedAt = new Date();
+        note.deletedAt = null;
+
+        return note;
+    }
 }
 
 export default new NotesRepo();
