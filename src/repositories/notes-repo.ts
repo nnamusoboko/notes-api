@@ -20,13 +20,10 @@ class NotesRepo {
 
     retrieveNotes = async (offset?: number, limit?: number): Promise<Note[]> => {
         console.log('DEBUG[repo]: ', 'Offset:', offset, 'Limit:', limit);
-        
-        if (!(offset && limit)) {
+
+        if (offset === undefined || limit === undefined) {
             return [...this.notesArr]; 
         }
-
-        console.log('offset: ', offset);
-        console.log('limit: ', limit);
         
         return this.notesArr.slice(offset, offset + limit); 
     }
