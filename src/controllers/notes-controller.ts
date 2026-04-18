@@ -144,6 +144,39 @@ class NotesController {
             })
         }
     }
+
+    getRestoredNote: RequestHandler = async (req: Request, res:Response) => {
+        const { id } = req.params;
+        
+        if (!id) {
+            return res.status(400).json({
+                "message": "Provide note-id"
+            });
+        }
+
+        if (typeof id !== 'string') {
+            return res.status(400).json({
+                "message": "Provide a valid note-id"
+            });
+        }
+
+        try {
+            const restoredNote: Note = await NotesService.restoreNote(id);
+            return res.status(200).json({
+                "data": restoredNote
+            });
+        } catch (error: unknown) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json({
+                    "message": error.message
+                });
+            }
+
+            return res.status(500).json({
+                "message": "Internal server Error"
+            })
+        }
+    }
 }
 
 export default new NotesController();

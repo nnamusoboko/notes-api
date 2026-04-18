@@ -11,6 +11,7 @@ router.get('/notes/deleted', Handler.getDeletedNotes);
 router.get('/notes/:id', Handler.getSingleNote); 
 router.patch('/notes/:id', Handler.updateSingleNote);
 router.delete('/notes/:id', Handler.deleteNote);
+router.post('/notes/:id/restore', Handler.getRestoredNote);
 
 router.get('/health', (_req, res) => {
     res.status(200).json({"message": "Server running"});
