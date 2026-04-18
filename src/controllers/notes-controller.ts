@@ -14,8 +14,35 @@ class NotesController {
         });
     }
 
-    getAllNotes: RequestHandler = async (_req: Request, res: Response) => {
-       const allNotes = await NotesService.getNotes(); 
+    getAllNotes: RequestHandler = async (req: Request, res: Response) => {
+        const {page, limit} = req.query;
+
+        const pageNum = page ? Number(page) : undefined;
+        const limitNum = limit ? Number(limit) : undefined;
+        console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', limitNum);
+
+        if (!page) {
+            if (typeof pageNum !== 'number') {
+                return res.status(400).json({"message" : "Please provide a page number"});
+            }
+
+            if (typeof pageNum === 'number' && pageNum < 1) {
+                return res.status(400).json({"message": "please a postive page number like 1,...."});
+
+            }
+        }
+
+        if (!limit) {
+            if (typeof limitNum !== 'number') {
+                return res.status(400).json({"message": "Provide valid page limit format"});
+            }
+
+            if (typeof limitNum === 'number' && limitNum < 1) {
+                return res.status(400).json({"message": "Provide a valid page limit"});
+            }
+        }
+
+       const allNotes = await NotesService.getNotes(pageNum, limitNum); 
        return res.status(200).json({
            "message": "All notes returned",
            "data": allNotes
