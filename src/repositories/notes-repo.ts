@@ -22,11 +22,16 @@ class NotesRepo {
     retrieveNotes = async (offset?: number, limit?: number): Promise<Note[]> => {
         console.log('DEBUG[repo]: ', 'Offset:', offset, 'Limit:', limit);
 
+        let tempArr: Note[] = [];
+
         if (offset === undefined || limit === undefined) {
-            return [...this.notesArr]; 
+            tempArr = this.notesArr.filter(note => note.deletedAt === null);
+            return tempArr; 
         }
         
-        return this.notesArr.slice(offset, offset + limit); 
+        tempArr = this.notesArr.slice(offset, offset + limit).filter(note => note.deletedAt === null);
+
+        return tempArr;
     }
 
     retrieveNoteById = async (noteId: string): Promise<Note | undefined> => {
