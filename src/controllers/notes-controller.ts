@@ -17,28 +17,22 @@ class NotesController {
     getAllNotes: RequestHandler = async (req: Request, res: Response) => {
         const {page, limit} = req.query;
 
-        const pageNum = page ? Number(page) : undefined;
-        const limitNum = limit ? Number(limit) : undefined;
+        let pageNum;
+        let limitNum = limit ? Number(limit) : undefined;
         console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', limitNum);
 
-        if (page) {
-            if (typeof pageNum !== 'number') {
-                return res.status(400).json({"message" : "Please provide a page number"});
-            }
+        if (page !== undefined) {
+            pageNum = Number(page);
 
-            if (typeof pageNum === 'number' && pageNum < 1) {
-                return res.status(400).json({"message": "please a postive page number like 1,...."});
-
+            if (Number.isNaN(pageNum) || pageNum < 1) {
+                return res.status(400).json({"message": "Please valid page number"});
             }
         }
 
-        if (limit) {
-            if (typeof limitNum !== 'number') {
-                return res.status(400).json({"message": "Provide valid page limit format"});
-            }
-
-            if (typeof limitNum === 'number' && limitNum < 1) {
-                return res.status(400).json({"message": "Provide a valid page limit"});
+        if (limit !== undefined) {
+            limitNum = Number(limit)
+            if (Number.isNaN(limitNum) || limitNum < 1) {
+                return res.status(400).json({"message": "Provide valid page limit"});
             }
         }
 
