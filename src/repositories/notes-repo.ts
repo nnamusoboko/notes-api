@@ -55,6 +55,10 @@ class NotesRepo {
 
         return this.notesArr.length < originalLength;        
     }
+
+    returnNoteCount = async (): Promise<number> => {
+        return this.notesArr.length;
+    }
 }
 
 export default new NotesRepo();

@@ -66,6 +66,30 @@ class NotesService {
 
          return; 
     }
+
+    getMetaData = async (page: number, limit: number): Promise<NotesMetaData> => {
+        const totalCount: number = await NotesRepo.returnNoteCount();
+        let totalPages: number;  
+        let hasPrev: boolean, hasNext: boolean;
+
+        if (!totalCount) {
+            throw new AppError("No notes found", 404);
+        }
+
+        totalPages = Math.ceil(totalCount / limit);
+
+        hasPrev = page > 1 && totalPages > 1;
+        hasNext = page < totalPages;
+        
+        return {
+           totalCount,
+           totalPages,
+           currentPage: page,
+           limit,
+           hasNext,
+           hasPrev
+        }
+    }
 }
 
 export default new NotesService();
