@@ -35,7 +35,7 @@ class NotesRepo {
     }
 
     retrieveNoteById = async (noteId: string): Promise<Note | undefined> => {
-        return this.notesArr.find(note => note.id === noteId);
+        return this.notesArr.find(note => note.id === noteId && note.deletedAt === null);
     }
 
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
@@ -81,7 +81,7 @@ class NotesRepo {
     }
 
     restoreNote = async (noteId: string): Promise<Note | null> => {
-        const note = this.notesArr.find(note => note.id === noteId);
+        const note: Note | undefined = await this.retrieveNoteById(noteId);
 
         if (!note) return null;
 
