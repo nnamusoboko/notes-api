@@ -21,7 +21,7 @@ class NotesController {
         const limitNum = limit ? Number(limit) : undefined;
         console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', limitNum);
 
-        if (!page) {
+        if (page) {
             if (typeof pageNum !== 'number') {
                 return res.status(400).json({"message" : "Please provide a page number"});
             }
@@ -32,7 +32,7 @@ class NotesController {
             }
         }
 
-        if (!limit) {
+        if (limit) {
             if (typeof limitNum !== 'number') {
                 return res.status(400).json({"message": "Provide valid page limit format"});
             }
