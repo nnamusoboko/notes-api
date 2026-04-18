@@ -23,7 +23,16 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (): Promise<Note[]> => {
+    getNotes = async (page?: number, limit?: number): Promise<Note[]> => {
+        
+
+        if (page && limit) {
+            const offset = (page -1) * limit;
+
+            console.log('DEBUG[service]: ', 'Page:', page, 'Limit:', limit);
+
+            return await NotesRepo.retrieveNotes(offset, limit);
+        }
         return await NotesRepo.retrieveNotes();
     }
 
