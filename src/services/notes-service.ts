@@ -34,7 +34,7 @@ class NotesService {
             const notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);
             if (notesData.length < 1) throw new AppError(`No notes found with word [${search}] in title`, 404);
             
-            const meta = this.getMetaData(page, limit, notesData.length);
+            const meta = await this.getMetaData(page, limit);
             
             return {
                 meta,
@@ -48,7 +48,7 @@ class NotesService {
             console.log('DEBUG[service]: ', 'Page:', page, 'Limit:', limit);
 
             notesData = await NotesRepo.retrieveNotes(offset, limit);
-            meta = this.getMetaData(page, limit, notesData.length);
+            meta = await this.getMetaData(page, limit);
 
             return {
                 meta,
@@ -63,7 +63,7 @@ class NotesService {
             notesData = await NotesRepo.retrieveNotes(offset, limit, search);
             if (!notesData) throw new AppError("No notes match your saerch found", 404);
 
-            meta = this.getMetaData(page, limit, notesData.length);
+            meta = await this.getMetaData(page, limit);
 
             return {
                 meta: meta,
@@ -72,7 +72,7 @@ class NotesService {
         }
 
         notesData = await NotesRepo.retrieveNotes();
-        meta =  this.getMetaData(page, limit, notesData.length);
+        meta =  await this.getMetaData(page, limit);
 
         return {
             meta,
@@ -109,8 +109,8 @@ class NotesService {
         }
     }
 
-    getMetaData =  (page: number, limit: number, noteCount: number): NotesMetaData => {
-        const totalCount: number =  noteCount;
+    getMetaData =  async (page: number, limit: number): Promise<NotesMetaData> => {
+        const totalCount: number =  await NotesRepo.returnNoteCount();
         let totalPages: number;  
         let hasPrev: boolean, hasNext: boolean;
 
