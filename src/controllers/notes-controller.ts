@@ -15,7 +15,7 @@ class NotesController {
     }
 
     getAllNotes: RequestHandler = async (req: Request, res: Response) => {
-        const {page, limit} = req.query;
+        const {page, limit, search} = req.query;
 
         let pageNum;
         let limitNum = limit ? Number(limit) : undefined;
@@ -36,7 +36,19 @@ class NotesController {
             }
         }
 
-       const data = await NotesService.getNotes(pageNum, limitNum); 
+        if (search !== undefined) {
+            if (typeof search !== 'string') {
+                return res.status(400).json({
+                    "message": "Provide a valid search word"
+                });
+            }
+
+            if (search.trim() === "") {
+                return res.status(400).json({"message": "Provide a search word"});
+            }
+        }
+
+       const data = await NotesService.getNotes(pageNum, limitNum, search); 
        return res.status(200).json({
            data
        })
