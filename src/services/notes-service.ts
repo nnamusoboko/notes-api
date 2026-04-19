@@ -23,9 +23,18 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (page?: number, limit?: number): Promise<PaginatedResponse> => {
+    getNotes = async (page?: number, limit?: number, search?: string): Promise<PaginatedResponse | Note[]> => {
         let notesData: Note[];
         let meta: NotesMetaData;
+
+        if (search !== undefined) {
+            if (search?.trim() === "") throw new AppError("Provide a valid keyword", 400);
+            
+            const searchResults = await NotesRepo.searchByKeyword(search);
+            if (searchResults.length < 1) throw new AppError(`No notes found with word: [${search}] in titel`, 404);
+
+            return searchResults;
+        } 
         
         if (page && limit) {
             const offset = (page -1) * limit;
