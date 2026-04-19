@@ -117,8 +117,6 @@ class NotesService {
 
         hasPrev = page > 1 && page <= totalPages;
         hasNext = page < totalPages;
-
-        // if (page > totalPages) throw new AppError("Requested page doesnt exist basing on your limit", 404);
         
         return {
            totalCount,
