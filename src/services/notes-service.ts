@@ -59,9 +59,8 @@ class NotesService {
             if (search.trim() === "") throw new AppError("Please provide search keyword", 400);
             
             notesData = await NotesRepo.retrieveNotes(offset, limit, search);
-            if (!notesData) throw new AppError("No notes match your saerch found", 404);
 
-            meta = await this.getMetaData(page, limit);
+            meta = await this.getMetaData(page, limit, notesData.length);
 
             return {
                 meta: meta,
