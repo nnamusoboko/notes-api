@@ -90,8 +90,6 @@ class NotesService {
         if (!result) {
            throw new AppError("Note not found", 404);
         }
-
-         return; 
     }
 
     getMetaData = async (page: number, limit: number): Promise<NotesMetaData> => {
