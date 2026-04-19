@@ -113,7 +113,7 @@ class NotesService {
         let totalPages: number;  
         let hasPrev: boolean, hasNext: boolean;
         
-        const totalCount: number = searchCount || await NotesRepo.returnNoteCount();
+        const totalCount: number = searchCount ?? await NotesRepo.returnNoteCount();
 
         if (!totalCount) {
             throw new AppError("No notes found", 404);
