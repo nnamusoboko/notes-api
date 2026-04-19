@@ -43,6 +43,12 @@ class NotesController {
                 return res.status(400).json({"message": "Provide valid page limit"});
             }
 
+            if (limitNum === 0) {
+                return res.status(400).json({
+                    "message": "Provide number bigger than 0"
+                });
+            }
+
             limitNum = limitNum > 50 ? 20 : limitNum;
         }
 
