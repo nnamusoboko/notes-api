@@ -42,6 +42,8 @@ class NotesController {
             if (Number.isNaN(limitNum) || limitNum < 1) {
                 return res.status(400).json({"message": "Provide valid page limit"});
             }
+
+            limitNum = limitNum > 50 ? 20 : limitNum;
         }
 
         if (search !== undefined) {
