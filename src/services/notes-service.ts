@@ -84,13 +84,7 @@ class NotesService {
     }
 
     getDeletedNotes = async (): Promise<Note[]>  => {
-        const returned: Note[] = await NotesRepo.extractDeletedNotes();
-        
-        if (returned.length < 1) {
-            throw new AppError("No deleted notes found", 404);
-        }
-
-        return returned;
+        return await NotesRepo.extractDeletedNotes();
     }
 
     restoreNote = async (noteId: string): Promise<Note> => {
