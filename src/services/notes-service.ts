@@ -29,7 +29,7 @@ class NotesService {
         let offset: number;
 
         if (search !== undefined && page === undefined && limit === undefined) {
-            if (search?.trim() === "") throw new AppError("Provide a valid keyword", 400);
+            if (search.trim() === "") throw new AppError("Provide a valid keyword", 400);
             
             const notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);
             if (notesData.length < 1) throw new AppError(`No notes found with word [${search}] in title`, 404);
