@@ -1,6 +1,7 @@
 import type { CreateNoteRequest, Note, NotesMetaData, PaginatedResponse, UpdateNoteRequest } from "../types/types.js"
 import NotesRepo from '../repositories/notes-repo.js';
 import { AppError } from "../utils/error.js";
+import { getMetaData } from "../utils/pagination.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<Note> => {
@@ -34,7 +35,7 @@ class NotesService {
             
             notesData = await NotesRepo.retrieveNotes(offset, limit, search);
 
-            meta = await this.getMetaData(page, limit, notesData.length);
+            meta = getMetaData(page, limit, notesData.length);
 
             return {
                 meta: meta,
@@ -45,7 +46,7 @@ class NotesService {
         offset = (page - 1) * limit;
         notesData = await NotesRepo.retrieveNotes(offset, limit);
         const notesCount = await NotesRepo.returnNoteCount(); 
-        meta =  await this.getMetaData(page, limit, notesCount);
+        meta =  getMetaData(page, limit, notesCount);
 
         return {
             meta,
@@ -79,27 +80,6 @@ class NotesService {
 
         if (!result) {
            throw new AppError("Note not found", 404);
-        }
-    }
-
-    getMetaData =  async (page: number, limit: number, notesCount: number): Promise<NotesMetaData> => {
-        let totalPages: number;  
-        let hasPrev: boolean, hasNext: boolean;
-
-        const totalCount: number = notesCount;
-
-        totalPages = Math.ceil(totalCount / limit);
-
-        hasPrev = page > 1 && page <= totalPages;
-        hasNext = page < totalPages;
-        
-        return {
-           totalCount,
-           totalPages,
-           currentPage: page,
-           limit,
-           hasNext,
-           hasPrev
         }
     }
 
