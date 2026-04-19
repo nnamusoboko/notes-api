@@ -5,22 +5,7 @@ import { getMetaData } from "../utils/pagination.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<Note> => {
-        if (typeof note.title !== 'string' ) {
-              throw new AppError("Wrong title format provided", 400);
-        }
-
-        if (note.title.trim() === "") {
-            throw new AppError("No title provided", 400);
-        }
-
-        if (typeof note.contents !== 'string') {
-            throw new AppError("Invalid content type provided", 400);
-        }
-
-        if (note.contents.trim() === "") {
-            throw new AppError("No contents provided", 400);
-        }
-
+        this.validateNoteContent(note.title, note.contents);
         return await NotesRepo.saveNote(note);
     }
 
@@ -65,8 +50,9 @@ class NotesService {
     }
 
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note> => {
-        const note = await NotesRepo.updateNote(noteId, noteInfo);
+        this.validateNoteContent(noteInfo.title, noteInfo.contents)
 
+        const note = await NotesRepo.updateNote(noteId, noteInfo);
         if (!note) {
             throw new AppError("Note not found", 404);
         }
@@ -99,6 +85,24 @@ class NotesService {
         }
 
         return note;
+    }
+
+    private readonly validateNoteContent = (title?: string, contents?: string): void=> {
+        if (typeof title !== 'string') {
+              throw new AppError("Content must be a string", 400);
+        }
+
+        if (title.trim() === "") {
+            throw new AppError("No title provided", 400);
+        }
+
+        if (typeof contents !== 'string') {
+            throw new AppError('Content must be a string', 400);
+        }
+
+        if (contents.trim() === '') {
+            throw new AppError('Content is empty', 400);
+        }
     }
 }
 
