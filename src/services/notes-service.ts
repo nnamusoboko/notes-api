@@ -23,7 +23,7 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (page?: number, limit?: number, search?: string): Promise<PaginatedResponse> => {
+    getNotes = async (page = 1, limit = 3, search?: string): Promise<PaginatedResponse> => {
         let notesData: Note[];
         let meta: NotesMetaData;
         let offset: number;
@@ -34,7 +34,7 @@ class NotesService {
             const notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);
             if (notesData.length < 1) throw new AppError(`No notes found with word [${search}] in title`, 404);
             
-            const meta = this.getMetaData(1, 10, notesData.length);
+            const meta = this.getMetaData(page, limit, notesData.length);
             
             return {
                 meta,
@@ -70,10 +70,6 @@ class NotesService {
                 notes: notesData
             }
         }
-
-        // set default page and limit if user doesnt provide
-        page = 1;
-        limit = 10;
 
         notesData = await NotesRepo.retrieveNotes();
         meta =  this.getMetaData(page, limit, notesData.length);
