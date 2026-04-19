@@ -47,11 +47,17 @@ class NotesController {
                 return res.status(400).json({"message": "Provide a search word"});
             }
         }
-
-       const data = await NotesService.getNotes(pageNum, limitNum, search); 
-       return res.status(200).json({
-           data
-       })
+        try {
+            const data = await NotesService.getNotes(pageNum, limitNum, search); 
+            return res.status(200).json({
+                data
+            }); 
+        } catch (error: unknown) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json({"message": error.message});
+            }
+            return res.status(500).json({"message": "Internal server Error"});
+        }
     }
 
     getSingleNote: RequestHandler = async (req: Request, res: Response) => {
