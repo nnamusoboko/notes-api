@@ -44,7 +44,8 @@ class NotesService {
 
         offset = (page - 1) * limit;
         notesData = await NotesRepo.retrieveNotes(offset, limit);
-        meta =  await this.getMetaData(page, limit);
+        const notesCount = await NotesRepo.returnNoteCount(); 
+        meta =  await this.getMetaData(page, limit, notesCount);
 
         return {
             meta,
@@ -81,11 +82,11 @@ class NotesService {
         }
     }
 
-    getMetaData =  async (page: number, limit: number, searchCount?: number): Promise<NotesMetaData> => {
+    getMetaData =  async (page: number, limit: number, notesCount: number): Promise<NotesMetaData> => {
         let totalPages: number;  
         let hasPrev: boolean, hasNext: boolean;
 
-        const totalCount: number = searchCount ?? await NotesRepo.returnNoteCount();
+        const totalCount: number = notesCount;
 
         totalPages = Math.ceil(totalCount / limit);
 
