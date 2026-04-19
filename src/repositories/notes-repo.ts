@@ -92,6 +92,8 @@ class NotesRepo {
 
         if (!note) return null;
 
+        if (note.deletedAt === null) return null;
+
         note.updatedAt = new Date();
         note.deletedAt = null;
 
