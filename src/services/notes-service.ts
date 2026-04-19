@@ -105,8 +105,10 @@ class NotesService {
 
         totalPages = Math.ceil(totalCount / limit);
 
-        hasPrev = page > 1 && totalPages > 1;
+        hasPrev = page > 1 && page <= totalPages;
         hasNext = page < totalPages;
+
+        if (page > totalPages) throw new AppError("Requested page doesnt exist basing on your limit", 404);
         
         return {
            totalCount,
