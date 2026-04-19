@@ -29,7 +29,7 @@ class NotesRepo {
             return tempArr; 
         }
         
-        tempArr = this.notesArr.slice(offset, offset + limit).filter(note => note.deletedAt === null);
+        tempArr = this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
 
         return tempArr;
     }
