@@ -29,12 +29,10 @@ class NotesService {
         let offset: number;
 
         if (search !== undefined && page === undefined && limit === undefined) {
-            if (search.trim() === "") throw new AppError("Provide a valid keyword", 400);
+            if (search.trim() === "") { throw new AppError("Provide a valid keyword", 400) };
             
-            const notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);
-            if (notesData.length < 1) throw new AppError(`No notes found with word [${search}] in title`, 404);
-            
-            const meta = await this.getMetaData(page, limit, notesData.length);
+            notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);    
+            meta = await this.getMetaData(page, limit, notesData.length);
             
             return {
                 meta,
@@ -112,19 +110,15 @@ class NotesService {
     getMetaData =  async (page: number, limit: number, searchCount?: number): Promise<NotesMetaData> => {
         let totalPages: number;  
         let hasPrev: boolean, hasNext: boolean;
-        
-        const totalCount: number = searchCount ?? await NotesRepo.returnNoteCount();
 
-        if (!totalCount) {
-            throw new AppError("No notes found", 404);
-        }
+        const totalCount: number = searchCount ?? await NotesRepo.returnNoteCount();
 
         totalPages = Math.ceil(totalCount / limit);
 
         hasPrev = page > 1 && page <= totalPages;
         hasNext = page < totalPages;
 
-        if (page > totalPages) throw new AppError("Requested page doesnt exist basing on your limit", 404);
+        // if (page > totalPages) throw new AppError("Requested page doesnt exist basing on your limit", 404);
         
         return {
            totalCount,
