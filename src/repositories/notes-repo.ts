@@ -26,32 +26,26 @@ class NotesRepo {
 
         // no pagination, no search
         if (offset === undefined && limit === undefined && search === undefined) {
-            console.log("[no search , no paginations]...")
             tempArr = this.notesArr.filter(note => note.deletedAt === null);
             return tempArr; 
         }
 
         // pagination only
         if (offset !== undefined && limit !== undefined && search === undefined) {
-            console.log("[paginate onl]....")
             return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
         }
 
         // search and pagination
         if (offset !== undefined && limit !== undefined && search) {
             if (search.trim() === "") return []; 
-            console.log("[search and paginate....]")
             tempArr = await this.searchByKeyword(search);
             return tempArr.slice(offset, offset + limit);
         }
 
         // search only matching words
         if (search !== undefined) {
-            console.log("searching[only]....");
             return this.searchByKeyword(search);
         }
-
-        console.log("[am retunring empty from repo....]");
 
         return [];
     }
