@@ -7,11 +7,19 @@ class NotesController {
     createNote: RequestHandler = async (req: Request, res: Response) => {
         const {title, contents}: CreateNoteRequest = req.body;
         
-        const createdNote = await NotesService.create({title, contents});
-        return res.status(201).json({
-            "message": "Note created",
-            "data": createdNote
-        });
+        try {
+            const createdNote = await NotesService.create({title, contents});
+            return res.status(201).json({
+                "message": "Note created",
+                "data": createdNote
+            });
+
+        } catch (error: unknown) {
+            if (error instanceof AppError) {
+                return res.status(error.statusCode).json({"message": error.message});
+            }
+            return res.status(500).json({"message": "Internal Server Error"});
+        }
     }
 
     getAllNotes: RequestHandler = async (req: Request, res: Response) => {
@@ -74,7 +82,7 @@ class NotesController {
             return res.status(200).json({
             "data": result
         });
-        } catch(error) {
+        } catch(error: unknown) {
             if (error instanceof AppError) {
                 return res.status(error.statusCode).json({"message": error.message});
             }
@@ -119,7 +127,7 @@ class NotesController {
                 "message": "Note updated",
                 "data": note
             });
-        } catch(error) {
+        } catch(error: unknown) {
             if (error instanceof AppError) {
                 return res.status(error.statusCode).json({"message": error.message});
             }
@@ -137,7 +145,7 @@ class NotesController {
         try {
             await NotesService.remove(noteId);
             return res.status(204).send();
-        } catch (error) {
+        } catch (error: unknown) {
             
             if (error instanceof AppError){
                 return res.status(error.statusCode).json({"message": error.message});
