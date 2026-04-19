@@ -88,20 +88,24 @@ class NotesService {
     }
 
     private readonly validateNoteContent = (title?: string, contents?: string): void=> {
-        if (typeof title !== 'string') {
-              throw new AppError("Content must be a string", 400);
+        if (title !== undefined) {
+            if (typeof title !== 'string') {
+                throw new AppError("Title must be text", 400); 
+            }
+            if (title.trim() === "") {
+                throw new AppError("Title cannot be empty", 400); 
+            }
         }
 
-        if (title.trim() === "") {
-            throw new AppError("No title provided", 400);
-        }
 
-        if (typeof contents !== 'string') {
-            throw new AppError('Content must be a string', 400);
-        }
+        if (contents !== undefined) {
+            if (typeof contents !== 'string') {
+                throw new AppError('Content must be string', 400);
+            }
 
-        if (contents.trim() === '') {
-            throw new AppError('Content is empty', 400);
+            if (contents.trim() === '') {
+                throw new AppError("Contents cannot be empty", 400)
+            }
         }
     }
 }
