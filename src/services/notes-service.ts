@@ -28,32 +28,6 @@ class NotesService {
         let meta: NotesMetaData;
         let offset: number;
 
-        if (search !== undefined && page === 1 && limit === 3) {
-            if (search.trim() === "") { throw new AppError("Provide a valid keyword", 400) };
-            
-            notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);    
-            meta = await this.getMetaData(page, limit, notesData.length);
-            
-            return {
-                meta,
-                notes: notesData,
-            };
-        } 
-        
-        if (page && limit && search === undefined) {
-            offset = (page -1) * limit;
-
-            console.log('DEBUG[service]: ', 'Page:', page, 'Limit:', limit);
-
-            notesData = await NotesRepo.retrieveNotes(offset, limit);
-            meta = await this.getMetaData(page, limit);
-
-            return {
-                meta,
-                notes: notesData,
-            };
-        }
-
         if (search && page && limit) {
             offset = (page - 1) * limit;
             if (search.trim() === "") throw new AppError("Please provide search keyword", 400);
@@ -68,7 +42,8 @@ class NotesService {
             }
         }
 
-        notesData = await NotesRepo.retrieveNotes();
+        offset = (page - 1) * limit;
+        notesData = await NotesRepo.retrieveNotes(offset, limit);
         meta =  await this.getMetaData(page, limit);
 
         return {
