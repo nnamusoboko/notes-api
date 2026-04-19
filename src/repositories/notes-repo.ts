@@ -101,7 +101,7 @@ class NotesRepo {
     }
 
     searchByKeyword = async (search: string): Promise<Note[]> => {
-        return this.notesArr.filter(note => note.title.includes(search) && note.deletedAt === null);
+        return this.notesArr.filter(note => note.title.toLowerCase().includes(search.toLowerCase()) && note.deletedAt === null);
     }
 }
 
