@@ -28,7 +28,7 @@ class NotesService {
         let meta: NotesMetaData;
         let offset: number;
 
-        if (search !== undefined && page === undefined && limit === undefined) {
+        if (search !== undefined && page === 1 && limit === 3) {
             if (search.trim() === "") { throw new AppError("Provide a valid keyword", 400) };
             
             notesData = await NotesRepo.retrieveNotes(undefined, undefined, search);    
