@@ -1,10 +1,9 @@
-import type { Request, Response, RequestHandler } from "express";
+import type { Request, Response, RequestHandler, NextFunction } from "express";
 import NotesService from '../services/notes-service.js';
 import type  { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js";
-import { AppError } from "../utils/error.js";
 
 class NotesController {
-    createNote: RequestHandler = async (req: Request, res: Response) => {
+    createNote: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const {title, contents}: CreateNoteRequest = req.body;
         
         try {
@@ -15,14 +14,11 @@ class NotesController {
             });
 
         } catch (error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({"message": error.message});
-            }
-            return res.status(500).json({"message": "Internal Server Error"});
+            return next(error);
         }
     }
 
-    getAllNotes: RequestHandler = async (req: Request, res: Response) => {
+    getAllNotes: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const {page, limit, search} = req.query;
 
         let pageNum;
@@ -63,14 +59,11 @@ class NotesController {
                 data
             }); 
         } catch (error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({"message": error.message});
-            }
-            return res.status(500).json({"message": "Internal server Error"});
+            return next(error);
         }
     }
 
-    getSingleNote: RequestHandler = async (req: Request, res: Response) => {
+    getSingleNote: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const noteId = req.params.id;
 
         if (!noteId || typeof noteId !== "string") {
@@ -85,15 +78,11 @@ class NotesController {
             "data": result
         });
         } catch(error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({"message": error.message});
-            }
-
-            return res.status(500).json({"message": "internal Server Error"});                
+            return next(error);
         }
     }
 
-    updateSingleNote: RequestHandler = async (req: Request, res: Response) => {
+    updateSingleNote: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const noteId  = req.params.id;
         const userInfo: UpdateNoteRequest = req.body;
         
@@ -130,14 +119,11 @@ class NotesController {
                 "data": note
             });
         } catch(error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({"message": error.message});
-            }
-            return res.status(500).json({"message": "Internal Server Error"});
+            return next(error);
         }
     }
 
-    deleteNote:RequestHandler = async (req, res) => {
+    deleteNote:RequestHandler = async (req, res, next) => {
         const noteId = req.params.id;
 
         if (!noteId || typeof noteId !== 'string') {
@@ -148,32 +134,22 @@ class NotesController {
             await NotesService.remove(noteId);
             return res.status(204).send();
         } catch (error: unknown) {
-            
-            if (error instanceof AppError){
-                return res.status(error.statusCode).json({"message": error.message});
-            }
-            return res.status(500).json({"message": "Internal server error"});
+            return next(error);
         }
     }
 
-    getDeletedNotes: RequestHandler = async (_req, res) => {
+    getDeletedNotes: RequestHandler = async (_req, res, next) => {
         try {
             const data = await NotesService.getDeletedNotes();
             return res.status(200).json({
                 data
             })
         } catch (error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({"message": error.message}); 
-            }
-
-            return res.status(500).json({
-                "message": "Internal server Error"
-            })
+            return next(error);
         }
     }
 
-    getRestoredNote: RequestHandler = async (req: Request, res:Response) => {
+    getRestoredNote: RequestHandler = async (req: Request, res:Response, next: NextFunction) => {
         const { id } = req.params;
         
         if (!id) {
@@ -194,15 +170,7 @@ class NotesController {
                 "data": restoredNote
             });
         } catch (error: unknown) {
-            if (error instanceof AppError) {
-                return res.status(error.statusCode).json({
-                    "message": error.message
-                });
-            }
-
-            return res.status(500).json({
-                "message": "Internal server Error"
-            })
+            return next(error);
         }
     }
 }
