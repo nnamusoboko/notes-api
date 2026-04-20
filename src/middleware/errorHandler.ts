@@ -8,5 +8,8 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     const statusCode = isCustomError ? err.statusCode : 500;
     const message = isCustomError ? err.message : 'Internal Server Error';
 
-    res.status(statusCode).json(message);
+    res.status(statusCode).json({
+        status: 'error',
+        message
+    });
 }
