@@ -40,7 +40,7 @@ class NotesController {
                 return res.status(HTTP_STATUS.BAD_REQUEST).json({"message": "Provide valid page limit"});
             }
 
-            limitNum = limitNum > MAX_PAGE_LIMIT ? MAX_PAGE_LIMIT : limitNum;
+            limitNum = Math.min(limitNum, MAX_PAGE_LIMIT);
         }
 
         if (search !== undefined) {
