@@ -10,18 +10,18 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (page = DEFAULT_PAGE_NUMBER, limit = DEFAULT_PAGE_LIMIT, search?: string): Promise<PaginatedResponse> => {
+    getNotes = async (pageNumber = DEFAULT_PAGE_NUMBER, pageLimit = DEFAULT_PAGE_LIMIT, search?: string): Promise<PaginatedResponse> => {
         let notesData: Note[];
         let meta: NotesMetaData;
         let offset: number;
 
-        if (search && page && limit) {
-            offset = (page - 1) * limit;
+        if (search && pageNumber && pageLimit) {
+            offset = (pageNumber - 1) * pageLimit;
             if (search.trim() === "") throw new AppError("Please provide search keyword", HTTP_STATUS.BAD_REQUEST);
             
-            notesData = await NotesRepo.retrieveNotes(offset, limit, search);
+            notesData = await NotesRepo.retrieveNotes(offset, pageLimit, search);
 
-            meta = getMetaData(page, limit, notesData.length);
+            meta = getMetaData(pageNumber, pageLimit, notesData.length);
 
             return {
                 meta: meta,
@@ -29,10 +29,10 @@ class NotesService {
             }
         }
 
-        offset = (page - 1) * limit;
-        notesData = await NotesRepo.retrieveNotes(offset, limit);
+        offset = (pageNumber - 1) * pageLimit;
+        notesData = await NotesRepo.retrieveNotes(offset, pageLimit);
         const notesCount = await NotesRepo.returnNoteCount(); 
-        meta =  getMetaData(page, limit, notesCount);
+        meta =  getMetaData(pageNumber, pageLimit, notesCount);
 
         return {
             meta,

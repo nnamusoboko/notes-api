@@ -23,8 +23,8 @@ class NotesController {
         const {page, limit, search} = req.query;
 
         let pageNum;
-        let limitNum = limit ? Number(limit) : undefined;
-        console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', limitNum);
+        let pageLimitNum = limit ? Number(limit) : undefined;
+        console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', pageLimitNum);
 
         if (page !== undefined) {
             pageNum = Number(page);
@@ -35,12 +35,12 @@ class NotesController {
         }
 
         if (limit !== undefined) {
-            limitNum = Number(limit)
-            if (Number.isNaN(limitNum) || limitNum < 1) {
+            pageLimitNum = Number(limit)
+            if (Number.isNaN(pageLimitNum) || pageLimitNum < 1) {
                 return res.status(HTTP_STATUS.BAD_REQUEST).json({"message": "Provide valid page limit"});
             }
-
-            limitNum = Math.min(limitNum, MAX_PAGE_LIMIT);
+            
+            pageLimitNum = Math.min(pageLimitNum, MAX_PAGE_LIMIT);
         }
 
         if (search !== undefined) {
@@ -55,7 +55,7 @@ class NotesController {
             }
         }
         try {
-            const data = await NotesService.getNotes(pageNum, limitNum, search); 
+            const data = await NotesService.getNotes(pageNum, pageLimitNum, search); 
             return res.status(HTTP_STATUS.OK).json({
                 data
             }); 
