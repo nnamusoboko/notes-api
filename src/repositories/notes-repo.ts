@@ -81,11 +81,11 @@ class NotesRepo {
         const note = await this.retrieveNoteById(noteId);
 
         if (!note) { return false; }
-
+        // soft delete
         const now = new Date();
         note.deletedAt = now;
         note.updatedAt = now;
-        
+
         return true;
     }
 
