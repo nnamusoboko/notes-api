@@ -78,21 +78,15 @@ class NotesRepo {
     }
 
     removeNote = async (noteId: string): Promise<boolean> => {
-        let isDeleted: boolean = false;
+        const note = await this.retrieveNoteById(noteId);
+
+        if (!note) { return false; }
+
+        const now = new Date();
+        note.deletedAt = now;
+        note.updatedAt = now;
         
-        // soft delete
-        for (const note of this.notesArr) {
-            if (note.id === noteId && note.deletedAt === null) {
-                const now = new Date();
-                note.deletedAt = now;
-                note.updatedAt = now;
-                isDeleted = true;
-
-                return isDeleted;
-            }
-        }
-
-        return isDeleted;        
+        return true;
     }
 
     returnNoteCount = async (): Promise<number> => {
