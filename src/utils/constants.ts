@@ -1,6 +1,7 @@
 export const DEFAULT_PAGE_LIMIT = 10;
 export const DEFAULT_PAGE_NUMBER = 1;
 export const MAX_PAGE_LIMIT = 50;
+export const DEFAULT_SEARCH_STRING = '';
 
 export const HTTP_STATUS = {
     OK: 200,
