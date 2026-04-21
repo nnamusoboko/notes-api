@@ -1,8 +1,8 @@
 import type { Request, Response, RequestHandler, NextFunction } from "express";
 import NotesService from '../services/notes-service.js';
 import type  { CreateNoteRequest, Note, QueryParams, UpdateNoteRequest } from "../types/types.js";
-import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, DEFAULT_SEARCH_STRING, HTTP_STATUS } from "../utils/constants.js";
-import { validateQueryParams } from "../middleware/validate.js";
+import { HTTP_STATUS } from "../utils/constants.js";
+import { validateQueryParams } from "./validate.js";
 class NotesController {
     createNote: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const {title, contents}: CreateNoteRequest = req.body;
