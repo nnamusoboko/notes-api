@@ -1,8 +1,8 @@
 import type { Request, Response, RequestHandler, NextFunction } from "express";
 import NotesService from '../services/notes-service.js';
-import type  { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js";
-import { HTTP_STATUS, MAX_PAGE_LIMIT } from "../utils/constants.js";
-
+import type  { CreateNoteRequest, Note, QueryParams, UpdateNoteRequest } from "../types/types.js";
+import { HTTP_STATUS } from "../utils/constants.js";
+import { validateQueryParams } from "../middleware/validate.js";
 class NotesController {
     createNote: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const {title, contents}: CreateNoteRequest = req.body;
@@ -20,42 +20,16 @@ class NotesController {
     }
 
     getAllNotes: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-        const {page, limit, search} = req.query;
+        const {page, limit, search} = req.query as QueryParams;
 
-        let pageNum;
-        let pageLimitNum = limit ? Number(limit) : undefined;
-        console.log('DEBUG[controller]: ', 'Page:', pageNum, 'Limit:', pageLimitNum);
+        validateQueryParams(req.query as QueryParams);
 
-        if (page !== undefined) {
-            pageNum = Number(page);
-
-            if (Number.isNaN(pageNum) || pageNum < 1) {
-                return res.status(HTTP_STATUS.BAD_REQUEST).json({"message": "Please valid page number"});
-            }
-        }
-
-        if (limit !== undefined) {
-            pageLimitNum = Number(limit)
-            if (Number.isNaN(pageLimitNum) || pageLimitNum < 1) {
-                return res.status(HTTP_STATUS.BAD_REQUEST).json({"message": "Provide valid page limit"});
-            }
-            
-            pageLimitNum = Math.min(pageLimitNum, MAX_PAGE_LIMIT);
-        }
-
-        if (search !== undefined) {
-            if (typeof search !== 'string') {
-                return res.status(HTTP_STATUS.BAD_REQUEST).json({
-                    "message": "Provide a valid search word"
-                });
-            }
-
-            if (search.trim() === "") {
-                return res.status(HTTP_STATUS.BAD_REQUEST).json({"message": "Provide a search word"});
-            }
-        }
+        const pageNum = Number(page);
+        const pageLimit = Number(limit);
+        const searchWord = search;
+ 
         try {
-            const data = await NotesService.getNotes(pageNum, pageLimitNum, search); 
+            const data = await NotesService.getNotes(pageNum, pageLimit, searchWord); 
             return res.status(HTTP_STATUS.OK).json({
                 data
             }); 
