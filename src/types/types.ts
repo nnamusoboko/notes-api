@@ -23,3 +23,8 @@ export interface PaginatedResponse {
 
 export type CreateNoteRequest = Omit<Note, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
 export type UpdateNoteRequest = Partial<Pick<Note, 'title' | 'contents'>>
+export interface QueryParams {
+    page?: string | undefined,
+    limit?: string | undefined,
+    search?: string | undefined
+}
