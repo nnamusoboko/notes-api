@@ -2,7 +2,7 @@ import type { CreateNoteRequest, Note, NotesMetaData, PaginatedResponse, UpdateN
 import NotesRepo from '../repositories/notes-repo.js';
 import { AppError } from "../utils/error.js";
 import { getMetaData } from "../utils/pagination.js";
-import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, HTTP_STATUS } from "../utils/constants.js";
+import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, DEFAULT_SEARCH_STRING, HTTP_STATUS } from "../utils/constants.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<Note> => {
@@ -10,7 +10,7 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (pageNumber = DEFAULT_PAGE_NUMBER, pageLimit = DEFAULT_PAGE_LIMIT, search?: string): Promise<PaginatedResponse> => {
+    getNotes = async (pageNumber = DEFAULT_PAGE_NUMBER, pageLimit = DEFAULT_PAGE_LIMIT, search = DEFAULT_SEARCH_STRING): Promise<PaginatedResponse> => {
         let notesData: Note[];
         let meta: NotesMetaData;
         let offset: number;
