@@ -19,19 +19,8 @@ class NotesRepo {
         return newNote;
     }
 
-    retrieveNotes = async (offset?: number, limit?: number, search?: string): Promise<Note[]> => {
-        console.log('DEBUG[repo]: ', 'Offset:', offset, 'Limit:', limit, 'Search', search);
-
-        let tempArr: Note[] = [];
-
-        // no pagination, no search
-        if (offset === undefined && limit === undefined && search === undefined) {
-            tempArr = this.notesArr.filter(note => note.deletedAt === null);
-            return tempArr; 
-        }
-
-        // pagination only
-        if (offset !== undefined && limit !== undefined && search === undefined) {
+    retrieveNotes = async (offset?: number, limit?: number): Promise<Note[]> => {
+        if (offset !== undefined && limit !== undefined ) {
             return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
         }
         return [];
