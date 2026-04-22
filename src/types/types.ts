@@ -28,3 +28,8 @@ export interface QueryParams {
     limit?: string | undefined,
     search?: string | undefined
 }
+
+export interface ISearchResult {
+    matchingList: Note[],
+    searchCount: number
+}
