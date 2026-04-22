@@ -21,14 +21,14 @@ class NotesController {
 
     getAllNotes: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
         const {page, limit, search} = req.query as QueryParams;
-
-        validateQueryParams(req.query as QueryParams);
-
-        const pageNum = page ? Number(page) : undefined;
-        const pageLimit = limit ? Number(limit) : undefined;
-        const searchWord = search || undefined;
  
         try {
+            validateQueryParams(req.query as QueryParams);
+
+            const pageNum = page ? Number(page) : undefined;
+            const pageLimit = limit ? Number(limit) : undefined;
+            const searchWord = search || undefined;
+            
             const data = await NotesService.getNotes(pageNum, pageLimit, searchWord); 
             return res.status(HTTP_STATUS.OK).json({
                 data
