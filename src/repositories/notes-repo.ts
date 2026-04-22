@@ -1,4 +1,4 @@
-import type { CreateNoteRequest, Note, UpdateNoteRequest } from "../types/types.js"; 
+import type { CreateNoteRequest, Note, UpdateNoteRequest, ISearchResult } from "../types/types.js"; 
 import crypto from 'node:crypto';
 
 class NotesRepo {
@@ -34,19 +34,6 @@ class NotesRepo {
         if (offset !== undefined && limit !== undefined && search === undefined) {
             return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
         }
-
-        // search and pagination
-        if (offset !== undefined && limit !== undefined && search) {
-            if (search.trim() === "") return []; 
-            tempArr = await this.searchByKeyword(search);
-            return tempArr.slice(offset, offset + limit);
-        }
-
-        // search only matching words
-        if (search !== undefined) {
-            return this.searchByKeyword(search);
-        }
-
         return [];
     }
 
@@ -110,8 +97,27 @@ class NotesRepo {
         return note;
     }
 
-    searchByKeyword = async (search: string): Promise<Note[]> => {
-        return this.notesArr.filter(note => note.title.toLowerCase().includes(search.toLowerCase()) && note.deletedAt === null);
+    searchByKeyword = async (offset: number, limit: number, search: string): Promise<ISearchResult> => {
+        let totalMatches = 0;
+        const searchResult: Note[] = [];
+
+        for (const note of this.notesArr) {
+            const matchesSearch = note.title.toLocaleLowerCase().includes(search.toLocaleLowerCase());
+            if (note.deletedAt === null && matchesSearch) {
+                totalMatches++;
+                const isAfterOffset = totalMatches > offset;
+                const isBeforLimit = searchResult.length < limit;  
+                
+                if (isAfterOffset && isBeforLimit) {
+                    searchResult.push(note);
+                }
+            }
+        }
+
+        return {
+            matchingList: searchResult,
+            searchCount: totalMatches
+        }
     }
 }
 
