@@ -15,27 +15,15 @@ class NotesService {
         let meta: NotesMetaData;
         let offset: number;
 
-        // auto on search[totalCount = ]
+        if (search?.trim() === '') {
+            throw new AppError("Please provide search keyword", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
+        pageLimit = pageLimit || DEFAULT_PAGE_LIMIT;
+
         if (search) {
-            if (search.trim() === "") throw new AppError("Please provide search keyword", HTTP_STATUS.BAD_REQUEST);
-
             let searchResult: ISearchResult;
-            // search and paginate
-            if (pageLimit && pageNumber) {
-                offset = (pageNumber - 1) * pageLimit;
-                searchResult = await NotesRepo.searchByKeyword(offset, pageLimit, search);
-    
-                meta = getMetaData(pageNumber, pageLimit, searchResult.searchCount);
-    
-                return {
-                    meta: meta,
-                    notes: searchResult.matchingList
-                }
-            }
-
-            // search only [use defaults]
-            pageNumber = DEFAULT_PAGE_NUMBER;
-            pageLimit = DEFAULT_PAGE_LIMIT;
 
             offset = (pageNumber -1) * pageLimit;
             searchResult = await NotesRepo.searchByKeyword(offset, pageLimit, search);
@@ -47,10 +35,6 @@ class NotesService {
                 notes: searchResult.matchingList
             }
         }
-        
-        // use defaults when no search or no pagaination && search done 
-        pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
-        pageLimit = pageLimit || DEFAULT_PAGE_LIMIT;
 
         offset = (pageNumber - 1) * pageLimit;
         notesData = await NotesRepo.retrieveNotes(offset, pageLimit);
