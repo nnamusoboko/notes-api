@@ -1,8 +1,8 @@
-import type { CreateNoteRequest, Note, NotesMetaData, PaginatedResponse, UpdateNoteRequest } from "../types/types.js"
+import type { CreateNoteRequest, ISearchResult, Note, NotesMetaData, PaginatedResponse, UpdateNoteRequest } from "../types/types.js"
 import NotesRepo from '../repositories/notes-repo.js';
 import { AppError } from "../utils/error.js";
 import { getMetaData } from "../utils/pagination.js";
-import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, DEFAULT_SEARCH_STRING, HTTP_STATUS } from "../utils/constants.js";
+import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, HTTP_STATUS } from "../utils/constants.js";
 
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<Note> => {
@@ -10,28 +10,52 @@ class NotesService {
         return await NotesRepo.saveNote(note);
     }
 
-    getNotes = async (pageNumber = DEFAULT_PAGE_NUMBER, pageLimit = DEFAULT_PAGE_LIMIT, search = DEFAULT_SEARCH_STRING): Promise<PaginatedResponse> => {
+    getNotes = async (pageNumber?: number, pageLimit?: number, search?: string): Promise<PaginatedResponse> => {
         let notesData: Note[];
         let meta: NotesMetaData;
         let offset: number;
 
-        if (search && pageNumber && pageLimit) {
-            offset = (pageNumber - 1) * pageLimit;
+        // auto on search[totalCount = ]
+        if (search) {
             if (search.trim() === "") throw new AppError("Please provide search keyword", HTTP_STATUS.BAD_REQUEST);
-            
-            notesData = await NotesRepo.retrieveNotes(offset, pageLimit, search);
 
-            meta = getMetaData(pageNumber, pageLimit, notesData.length);
+            let searchResult: ISearchResult;
+            // search and paginate
+            if (pageLimit && pageNumber) {
+                offset = (pageNumber - 1) * pageLimit;
+                searchResult = await NotesRepo.searchByKeyword(offset, pageLimit, search);
+    
+                meta = getMetaData(pageNumber, pageLimit, searchResult.searchCount);
+    
+                return {
+                    meta: meta,
+                    notes: searchResult.matchingList
+                }
+            }
+
+            // search only [use defaults]
+            pageNumber = DEFAULT_PAGE_NUMBER;
+            pageLimit = DEFAULT_PAGE_LIMIT;
+
+            offset = (pageNumber -1) * pageLimit;
+            searchResult = await NotesRepo.searchByKeyword(offset, pageLimit, search);
+    
+            meta = getMetaData(pageNumber, pageLimit, searchResult.searchCount);
 
             return {
                 meta: meta,
-                notes: notesData
+                notes: searchResult.matchingList
             }
         }
+        
+        // use defaults when no search or no pagaination && search done 
+        pageNumber = pageNumber || DEFAULT_PAGE_NUMBER;
+        pageLimit = pageLimit || DEFAULT_PAGE_LIMIT;
 
         offset = (pageNumber - 1) * pageLimit;
         notesData = await NotesRepo.retrieveNotes(offset, pageLimit);
-        meta =  getMetaData(pageNumber, pageLimit, notesData.length);
+        const totalNoteCount = await NotesRepo.returnNoteCount(); // O(1)
+        meta =  getMetaData(pageNumber, pageLimit, totalNoteCount);
 
         return {
             meta,
