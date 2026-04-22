@@ -22,8 +22,8 @@ export const validateQueryParams =  (query: QueryParams) =>  {
 
     if (query.limit !== undefined) {
         const pageLimit = Number(query.limit);
-        if (Number.isNaN(pageLimit) || pageLimit < 1) {
-            throw new AppError(`Page limit must be a number >=1`, BAD_REQUEST);
+        if (Number.isNaN(pageLimit) || pageLimit < 1 || pageLimit > 50) {
+            throw new AppError(`Page limit must be a number >=1 and <= 50`, BAD_REQUEST);
         }
     }
 
