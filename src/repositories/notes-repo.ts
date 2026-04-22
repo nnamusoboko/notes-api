@@ -19,11 +19,8 @@ class NotesRepo {
         return newNote;
     }
 
-    retrieveNotes = async (offset?: number, limit?: number): Promise<Note[]> => {
-        if (offset !== undefined && limit !== undefined ) {
-            return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
-        }
-        return [];
+    retrieveNotes = async (offset: number, limit: number): Promise<Note[]> => {
+        return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
     }
 
     retrieveNoteById = async (noteId: string, includeDeleted = false): Promise<Note | undefined> => {
