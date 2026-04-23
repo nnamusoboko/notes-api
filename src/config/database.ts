@@ -21,3 +21,18 @@ export const testConnection = async () => {
         process.exit(1);
     }
 }
+
+const shutDown = async () => {
+    try {
+        console.log('\nSIGTERM received. Cleaning up....');
+        await pool.end()
+        console.log('Database pool closed successfully');
+        process.exit(0);
+    } catch (err: unknown) {
+        console.error('Error while shutting down database:', err);
+        process.exit(1);
+    }
+}
+
+process.on('SIGINT', shutDown);
+process.on('SIGTERM', shutDown);
