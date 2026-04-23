@@ -6,7 +6,7 @@ export const validateQueryParams =  (query: QueryParams) =>  {
     const allowedParams = new Set(['page', 'limit', 'search']);
     const BAD_REQUEST = HTTP_STATUS.BAD_REQUEST;
 
-    // check unknow params
+    // check unknown params
     for (const key of Object.keys(query)) {
         if (!allowedParams.has(key)) {
             throw new AppError(`unknown param key: ${key}`, BAD_REQUEST);
