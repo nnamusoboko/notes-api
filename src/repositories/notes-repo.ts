@@ -23,8 +23,8 @@ class NotesRepo {
         return this.notesArr.filter(note => note.deletedAt === null).slice(offset, offset + limit);
     }
 
-    retrieveNoteById = async (noteId: string, includeDeleted = false): Promise<Note | undefined> => {
-        return  this.notesArr.find(note => {
+    retrieveNoteById = async (noteId: string, includeDeleted = false): Promise<Note | null> => {
+        const result = this.notesArr.find(note => {
             const matchesId = note.id === noteId;
 
             if (includeDeleted) {
@@ -32,6 +32,8 @@ class NotesRepo {
             }         
             return matchesId && note.deletedAt == null; 
         });
+
+        return result || null;
     }
 
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
@@ -71,7 +73,7 @@ class NotesRepo {
     }
 
     restoreNote = async (noteId: string): Promise<Note | null> => {
-        const note: Note | undefined = await this.retrieveNoteById(noteId, true);
+        const note: Note | null = await this.retrieveNoteById(noteId, true);
 
         if (!note) return null;
 
