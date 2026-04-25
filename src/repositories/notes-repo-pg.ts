@@ -67,7 +67,7 @@ class NotesRepo {
       throw new AppError('Invalid note-id', HTTP_STATUS.BAD_REQUEST);
     }
 
-    const query = `UPDATE notes SET deleted_at = NOW(), updated_at = NOW() WHERE (id = $1 RETUNRING AND deleted_at IS NULL)*`;
+    const query = `UPDATE notes SET deleted_at = NOW(), updated_at = NOW() WHERE (id = $1 AND deleted_at IS NULL) RETURNING *`;
     const result = await pool.query(query, [noteId]);
 
     return result.rows.length === 0;
