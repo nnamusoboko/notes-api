@@ -64,7 +64,7 @@ class NotesRepo {
         return true;
     }
 
-    returnNoteCount = async (): Promise<number> => {
+    getActiveNoteCount = async (): Promise<number> => {
         return this.notesArr.filter(note => note.deletedAt === null).length;
     }
 
