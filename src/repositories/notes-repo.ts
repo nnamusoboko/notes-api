@@ -36,12 +36,12 @@ class NotesRepo {
         return result || null;
     }
 
-    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | undefined> => {
+    updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note | null> => {
         
-        const result: Note | undefined = await this.retrieveNoteById(noteId);
+        const result: Note | null = await this.retrieveNoteById(noteId);
 
         if (!result) {
-            return undefined;
+            return null;
         }
 
         result.title = noteInfo.title ?? result.title;
