@@ -1,5 +1,5 @@
 import type { CreateNoteRequest, ISearchResult, Note, NotesMetaData, PaginatedResponse, UpdateNoteRequest } from "../types/types.js"
-import NotesRepo from '../repositories/notes-repo.js';
+import { notesRepo } from '../repositories/index.js';
 import { AppError } from "../utils/error.js";
 import { getMetaData } from "../utils/pagination.js";
 import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, HTTP_STATUS } from "../utils/constants.js";
@@ -7,7 +7,7 @@ import { DEFAULT_PAGE_LIMIT, DEFAULT_PAGE_NUMBER, HTTP_STATUS } from "../utils/c
 class NotesService {
     create = async (note: CreateNoteRequest): Promise<Note> => {
         this.validateNoteContent(note.title, note.contents);
-        return await NotesRepo.saveNote(note);
+        return await notesRepo.saveNote(note);
     }
 
     getNotes = async (pageNumber?: number, pageLimit?: number, search?: string): Promise<PaginatedResponse> => {
@@ -26,7 +26,7 @@ class NotesService {
             let searchResult: ISearchResult;
 
             offset = (pageNumber -1) * pageLimit;
-            searchResult = await NotesRepo.searchByKeyword(offset, pageLimit, search);
+            searchResult = await notesRepo.searchByKeyword(offset, pageLimit, search);
     
             meta = getMetaData(pageNumber, pageLimit, searchResult.searchCount);
 
@@ -37,8 +37,8 @@ class NotesService {
         }
 
         offset = (pageNumber - 1) * pageLimit;
-        notesData = await NotesRepo.retrieveNotes(offset, pageLimit);
-        const totalNoteCount = await NotesRepo.getActiveNoteCount();
+        notesData = await notesRepo.retrieveNotes(offset, pageLimit);
+        const totalNoteCount = await notesRepo.getActiveNoteCount();
         meta =  getMetaData(pageNumber, pageLimit, totalNoteCount);
 
         return {
@@ -48,7 +48,7 @@ class NotesService {
     }
 
     getNote = async (noteId: string): Promise<Note> => {
-        const note = await NotesRepo.retrieveNoteById(noteId);
+        const note = await notesRepo.retrieveNoteById(noteId);
 
         if (!note) {
             throw new AppError("Note not found", HTTP_STATUS.NOT_FOUND);
@@ -60,7 +60,7 @@ class NotesService {
     updateNote = async (noteId: string, noteInfo: UpdateNoteRequest): Promise<Note> => {
         this.validateNoteContent(noteInfo.title, noteInfo.contents)
 
-        const note = await NotesRepo.updateNote(noteId, noteInfo);
+        const note = await notesRepo.updateNote(noteId, noteInfo);
         if (!note) {
             throw new AppError("Note not found", HTTP_STATUS.NOT_FOUND);
         }
@@ -70,7 +70,7 @@ class NotesService {
 
     remove = async (noteId: string): Promise<void> => {
 
-        const result: boolean = await NotesRepo.removeNote(noteId);
+        const result: boolean = await notesRepo.removeNote(noteId);
 
         if (!result) {
            throw new AppError("Note not found", HTTP_STATUS.NOT_FOUND);
@@ -78,7 +78,7 @@ class NotesService {
     }
 
     getDeletedNotes = async (): Promise<Note[]>  => {
-        return await NotesRepo.extractDeletedNotes();
+        return await notesRepo.extractDeletedNotes();
     }
 
     restoreNote = async (noteId: string): Promise<Note> => {
@@ -86,7 +86,7 @@ class NotesService {
             throw new AppError("Provide note-id", HTTP_STATUS.BAD_REQUEST);
         }
 
-        const note: Note | null = await NotesRepo.restoreNote(noteId);
+        const note: Note | null = await notesRepo.restoreNote(noteId);
 
         if (note === null) {
             throw new AppError("Note not found", HTTP_STATUS.NOT_FOUND);
