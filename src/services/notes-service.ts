@@ -38,7 +38,7 @@ class NotesService {
 
         offset = (pageNumber - 1) * pageLimit;
         notesData = await NotesRepo.retrieveNotes(offset, pageLimit);
-        const totalNoteCount = await NotesRepo.returnNoteCount(); // O(1)
+        const totalNoteCount = await NotesRepo.getActiveNoteCount();
         meta =  getMetaData(pageNumber, pageLimit, totalNoteCount);
 
         return {
